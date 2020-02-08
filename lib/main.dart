@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return ChangeNotifierProvider.value(
       
       //we need to provide provider to all interesting parties
       //hence we wrap the Material app with ChangeNotifierProvider
@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
       //whenever that class update the widgets  which are listening only these are rebuild
       //for that you have to provide create methods in older version it is named ad builder 
 
-      create:(ctx)=>Products(),
+      //create:(ctx)=>Products(),
+      value: Products(),
+      //use value when vslue does not depend on context
 
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

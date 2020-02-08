@@ -29,8 +29,11 @@ class ProductsGrid extends StatelessWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10, 
       ), 
-      itemBuilder: (ctx,index)=> ChangeNotifierProvider(
-        create: (c)=>products[index],
+      itemBuilder: (ctx,index)=> ChangeNotifierProvider.value(
+        
+        value:products[index],
+
+        //create: (c)=>products[index],
         //create get new context c and pass it to current product
         //this ChangeNotifierProvider is used to listen change of one single product
         //it takes productIndex and provide it to ProductItem
