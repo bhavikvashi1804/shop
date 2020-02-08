@@ -17,8 +17,12 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final Product product=Provider.of<Product>(context);
+    final Product product=Provider.of<Product>(context,listen: false);
     //if you provide false here then UI does not change
+    print('product build');
+    //print statement not executed if we press like 
+    //means only leading part rebuild
+    //you have set the listen to the false thats why this is happening
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -35,14 +39,16 @@ class ProductItem extends StatelessWidget {
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
-          leading: IconButton(
-            color: Theme.of(context).accentColor,
-            icon: Icon(product.isFavorite?Icons.favorite:Icons.favorite_border),
-            onPressed: () {
-              product.toggleFavoriteStatus();
-              //here we donot require the setState as we are manage state via provider
-
-            },
+          leading: Consumer<Product>(
+            builder: (ctx,product,child)=>IconButton(
+              //in this contsructor child is something which will never chnage 
+              color: Theme.of(context).accentColor,
+              icon: Icon(product.isFavorite?Icons.favorite:Icons.favorite_border),
+              onPressed: () {
+                product.toggleFavoriteStatus();
+                //here we donot require the setState as we are manage state via provider
+              },
+            ),
           ),
           title: Text(
             product.title,
