@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+
+import '../provider/products_provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
 
@@ -16,9 +20,17 @@ class ProductDetailScreen extends StatelessWidget {
     //here we obtain productID
     //now we need to extract data of our ID for that we requires central state management
 
+
+    //using Provider 
+    final loadedProduct =Provider.of<Products>(context,listen: false).findByID(productID);
+    //listen false refers to when data change and when we perform notify this widget will not rebuild 
+    //in this screen we donot interest in update of data hence we set listen to false 
+    //by default listen value is true
+    //in products_grid.dart we want to listen update so have not specify listen to false
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product Name'),
+        title: Text(loadedProduct.title),
       ),
       body: Container(),
       
