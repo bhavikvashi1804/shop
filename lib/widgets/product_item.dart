@@ -41,7 +41,7 @@ class ProductItem extends StatelessWidget {
           backgroundColor: Colors.black87,
           leading: Consumer<Product>(
             builder: (ctx,product,child)=>IconButton(
-              //in this contsructor child is something which will never chnage 
+              //in this contsructor child is something which will never change 
               color: Theme.of(context).accentColor,
               icon: Icon(product.isFavorite?Icons.favorite:Icons.favorite_border),
               onPressed: () {
