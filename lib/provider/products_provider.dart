@@ -42,12 +42,32 @@ class Products with ChangeNotifier{
   ];
 
 
+  var _showOnlyFavorites=false;
+
+
   List<Product> get items{
     //do not returns _items directly 
     //returns copy of _items
     //if I return _items then it returns address of _items and we can change _items by using that address
     //that why we donot require to return address
-    return [..._items];
+
+    if(_showOnlyFavorites){
+      return _items.where((element) => element.isFavorite).toList();
+    }
+    else{
+       return [..._items];
+    }
+   
+  }
+
+  void showFavoritesOnly(){
+    _showOnlyFavorites=true;
+    notifyListeners();
+  }
+
+  void showAll(){
+    _showOnlyFavorites=false;
+    notifyListeners();
   }
 
   void addProduct(){
