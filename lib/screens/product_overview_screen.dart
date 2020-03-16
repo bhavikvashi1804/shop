@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shop/provider/product.dart';
-import 'package:shop/provider/products_provider.dart';
 
 import '../widgets/products_grid.dart';
 
@@ -10,11 +7,19 @@ enum FilterOptions{
   All,
 }
 
-class ProductsOverviewScreen extends StatelessWidget {
-  
+class ProductsOverviewScreen extends StatefulWidget {
+  @override
+  _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
+}
+
+class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+
+
+  var _showOnlyFavorites=false;
+
   @override
   Widget build(BuildContext context) {
-    final productContainer=Provider.of<Products>(context,listen: false);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Shop'),
@@ -34,20 +39,27 @@ class ProductsOverviewScreen extends StatelessWidget {
             ],
 
             onSelected: (value){
-              if(value==FilterOptions.Favorites){
+
+              setState(() {
+                if(value==FilterOptions.Favorites){
                 //show only favorite products
-                productContainer.showFavoritesOnly();
-              }
-              else{
-                //show all the products
-                productContainer.showAll();
-              }
+                // in last logic provider will return the filter result in all the pages 
+                //that is not required , in this page we want filter data - other page we want all data
+                //so convert this to Statefull widget
+                _showOnlyFavorites=true;
+                }
+                else{
+                  //show all the products
+                  _showOnlyFavorites=false; 
+                }  
+              });
+              
             },
 
           ),
         ],
       ),
-      body: ProductsGrid(),
+      body: ProductsGrid(_showOnlyFavorites),
     );
   }
 }

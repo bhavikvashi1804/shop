@@ -7,17 +7,21 @@ import '../widgets/product_item.dart';
 
 class ProductsGrid extends StatelessWidget {
 
-  
 
-  
+  var showOnlyFavs;
 
+  ProductsGrid(this.showOnlyFavs);
+  
   @override
   Widget build(BuildContext context) {
 
     //user provider and obtain Products ref
     final productsData = Provider.of<Products>(context);
     //use the getter and obtain list of items 
-    final products=productsData.items;
+    
+
+    //get the data according to filters
+    final products=showOnlyFavs? productsData.favoriteItems :productsData.items;
     
 
 
