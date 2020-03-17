@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/product_detail_screen.dart';
 import '../provider/product.dart';
+import '../provider/cart.dart';
 
 class ProductItem extends StatelessWidget {
   
@@ -18,11 +19,9 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final Product product=Provider.of<Product>(context,listen: false);
-    //if you provide false here then UI does not change
-    print('product build');
-    //print statement not executed if we press like 
-    //means only leading part rebuild
-    //you have set the listen to the false thats why this is happening
+    final Cart cart=Provider.of<Cart>(context,listen: false);
+    //set listen to false we want that items should be added to cart but we do not want build UI again
+    
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -57,7 +56,9 @@ class ProductItem extends StatelessWidget {
           trailing: IconButton(
               color: Theme.of(context).accentColor,
               icon: Icon(Icons.shopping_cart),
-              onPressed: () {}),
+              onPressed: () {
+                cart.addProduct(product.id, product.title, product.price);
+              }),
         ),
       ),
     );
