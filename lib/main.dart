@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import './screens/product_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './provider/products_provider.dart';
+import './provider/cart.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,19 +13,11 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      
-      //we need to provide provider to all interesting parties
-      //hence we wrap the Material app with ChangeNotifierProvider
-      //ChangeNotifierProvider class comes under package of provider
-      //it  allows to register class to which you can that listen in child wddgets
-      //whenever that class update the widgets  which are listening only these are rebuild
-      //for that you have to provide create methods in older version it is named ad builder 
-
-      //create:(ctx)=>Products(),
-      value: Products(),
-      //use value when vslue does not depend on context
-
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: Products()),
+        ChangeNotifierProvider.value(value: Cart()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Shop App',

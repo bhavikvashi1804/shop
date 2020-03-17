@@ -38,6 +38,8 @@ class Cart with ChangeNotifier{
     else{
       //add the product to the cart
       _items.putIfAbsent(
+        //items map key same as productID
+        //CartItem key DateTime of current time 
         productID,
         ()=>CartItem(
           id: DateTime.now().toString(),
