@@ -22,12 +22,12 @@ class OrderItem extends StatelessWidget {
               '\$ ${order.amount}'
             ),
             subtitle: Text(
-              DateFormat('dd MM yyyy hh:mm').format(order.dateTime),
+              DateFormat('dd/MM/yyyy hh:mm').format(order.dateTime),
             ),
             trailing: IconButton(
               icon: Icon(Icons.expand_more), 
               onPressed: (){
-                
+
               }
             ),
           ),
