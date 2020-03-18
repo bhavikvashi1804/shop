@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 class CartItem{
   final String id;
   final String title;
+ 
   final int quantity;
   final double price;
 
@@ -67,6 +68,14 @@ class Cart with ChangeNotifier{
 
     notifyListeners();
 
+  }
+
+
+  void removeItem(String productID){
+
+    _items.remove(productID);
+
+    notifyListeners();
   }
 
 }
