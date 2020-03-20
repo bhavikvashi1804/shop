@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../provider/product.dart';
+
 class EditProductScreen extends StatefulWidget {
 
   static const routeName='/edit-product';
@@ -19,10 +21,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlController=TextEditingController();
 
 
+  final _form=GlobalKey<FormState>();
+
+  var _editedProduct=Product(
+    id: null, 
+    title: '', 
+    description: '', 
+    price: 0, 
+    imageUrl: ''
+  );
+
+
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
+    print("Form");
     super.initState();
+    
   }
 
 
@@ -48,15 +63,37 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   }
 
+
+
+  void _saveForm(){
+    _form.currentState.save();
+
+
+    print(_editedProduct.imageUrl);
+    print(_editedProduct.description);
+    print(_editedProduct.price);
+    print(_editedProduct.title);
+    
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Product'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.save), 
+            onPressed: _saveForm,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
+          
+          key: _form,
           
           child: ListView(
             children: <Widget>[
@@ -70,6 +107,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_){
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
+                onSaved: (value){
+                  _editedProduct=Product(
+                    id: null ,
+                    description: _editedProduct.description ,
+                    imageUrl: _editedProduct.imageUrl,
+                    title: value ,
+                    price: _editedProduct.price,
+                  );
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -81,6 +127,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
                 keyboardType: TextInputType.number,
                 focusNode: _priceFocusNode,
+                onSaved: (value){
+                  _editedProduct=Product(
+                    id: null ,
+                    description: _editedProduct.description ,
+                    imageUrl: _editedProduct.imageUrl,
+                    title: _editedProduct.title ,
+                    price: double.parse(value),
+                  );
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -91,6 +146,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 //here we have enter button to enter new line
                 //show we do not need to provide to pass the focus to next input
                 focusNode: _descFocusNode,
+                onSaved: (value){
+                  _editedProduct=Product(
+                    id: null ,
+                    description: value ,
+                    imageUrl: _editedProduct.imageUrl,
+                    title: _editedProduct.title ,
+                    price: _editedProduct.price,
+                  );
+                },
 
               ),
               Row(
@@ -128,6 +192,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       //now we want that when user click on other field thwn it also show image preview
                       //as of noew when user press submit then and only then image is displayed
                       //so we have to use listener
+
+
+                      onFieldSubmitted:(_)=> _saveForm(),
+                      onSaved: (value){
+                        _editedProduct=Product(
+                          id: null ,
+                          description: _editedProduct.description ,
+                          imageUrl: value,
+                          title: _editedProduct.title ,
+                          price: _editedProduct.price,
+                        );
+                      },
 
                     ),
                   ),
