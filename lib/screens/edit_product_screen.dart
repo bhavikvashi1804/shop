@@ -35,7 +35,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
-    print("Form");
     super.initState();
     
   }
@@ -54,7 +53,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImageUrl(){
 
-    if(_imageUrlFocusNode.hasFocus){
+    if(!_imageUrlFocusNode.hasFocus){
       
       //now make sure that if url is not valid then we donot want to display image
       //if url is invalid image display URL will remain as it is
