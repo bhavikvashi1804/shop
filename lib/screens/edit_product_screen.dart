@@ -34,6 +34,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
   );
 
 
+  var _isInit=true;
+  var _initValues={
+    'title':'',
+    'desc':'',
+    'price':'',
+    'imageURL':'',
+  };
+
+
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
@@ -50,6 +59,31 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _imageUrlFocusNode.dispose();
     _imageUrlController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+
+    if(_isInit){
+       final productID=ModalRoute.of(context).settings.arguments as String;
+       if(productID!=null){
+         _editedProduct=Provider.of<Products>(context,listen: false).findByID(productID);
+         _initValues={
+          'title':_editedProduct.title,
+          'desc':_editedProduct.description,
+          'price':_editedProduct.price.toString(),
+          'imageURL':_editedProduct.imageUrl,
+        };
+        _imageUrlController.text=_editedProduct.imageUrl;
+       }
+      
+
+    }
+    _isInit=false;
+    //dependencies run multiple time 
+    //to over come this problem we need to manually execute it for once
+   
+    super.didChangeDependencies();
   }
 
 
@@ -87,8 +121,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
     _form.currentState.save();
 
-    Provider.of<Products>(context,listen: false).addProduct(_editedProduct);
-    Navigator.pop(context);
+    if(_editedProduct.id!=null){
+      //we have loaded product so leaded product has ID
+      //so we need to update the product
+       Provider.of<Products>(context,listen: false).updateProduct(_editedProduct.id,_editedProduct);
+     
+    }
+    else{
+      //id is null 
+      //means we have new product we need to create new product
+      Provider.of<Products>(context,listen: false).addProduct(_editedProduct);
+    }
+
+    
+    Navigator.pop(context); 
 
   }
 
@@ -113,6 +159,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: <Widget>[
               TextFormField(
+                initialValue: _initValues['title'],
                 decoration: InputDecoration(
                   labelText: 'Title',
                 ),
@@ -132,7 +179,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
                 onSaved: (value){
                   _editedProduct=Product(
-                    id: null ,
+                    id: _editedProduct.id,
+                    isFavorite: _editedProduct.isFavorite,
                     description: _editedProduct.description ,
                     imageUrl: _editedProduct.imageUrl,
                     title: value ,
@@ -141,6 +189,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initValues['price'],
                 decoration: InputDecoration(
                   labelText: 'Price',
                 ),
@@ -166,7 +215,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 focusNode: _priceFocusNode,
                 onSaved: (value){
                   _editedProduct=Product(
-                    id: null ,
+                    id: _editedProduct.id ,
+                    isFavorite: _editedProduct.isFavorite,
                     description: _editedProduct.description ,
                     imageUrl: _editedProduct.imageUrl,
                     title: _editedProduct.title ,
@@ -175,6 +225,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initValues['desc'],
                 decoration: InputDecoration(
                   labelText: 'Description',
                 ),
@@ -195,7 +246,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
                 onSaved: (value){
                   _editedProduct=Product(
-                    id: null ,
+                    id: _editedProduct.id ,
+                    isFavorite: _editedProduct.isFavorite,
                     description: value ,
                     imageUrl: _editedProduct.imageUrl,
                     title: _editedProduct.title ,
@@ -229,6 +281,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      //if you use contoller then it does not allow to use initialValue at here 
                       decoration: InputDecoration(
                         labelText: 'Image URL'
                       ),
@@ -256,11 +309,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       onFieldSubmitted:(_)=> _saveForm(),
                       onSaved: (value){
                         _editedProduct=Product(
-                          id: null ,
+                          id: _editedProduct.id ,
                           description: _editedProduct.description ,
                           imageUrl: value,
                           title: _editedProduct.title ,
                           price: _editedProduct.price,
+                          isFavorite: _editedProduct.isFavorite,
                         );
                       },
 
