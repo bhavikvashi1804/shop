@@ -21,6 +21,30 @@ class CartItem extends StatelessWidget {
         Provider.of<Cart>(context,listen: false).removeItem(productID);
 
       },
+      confirmDismiss: (direction){
+        //this is confirm dismiss means before perform confirm dismiss return true or false on this decision will be taken
+        //confirmDismiss takes argument as direction
+        //confirmDismiss requries to return Future Bool , show Dialog return the Future<bool>
+        return showDialog(
+          context: context,
+          builder: (ctx)=>AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to remove the item from the cart?'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: ()=>Navigator.of(ctx).pop(false), 
+                child: Text('No')
+              ),
+              FlatButton(
+                onPressed: ()=>Navigator.of(ctx).pop(true), 
+                child: Text('Yes'),
+              ),
+              
+            ],
+
+          ),
+        );
+      },
       background: Container(
         padding: EdgeInsets.only(right: 20),
         margin: EdgeInsets.symmetric(
