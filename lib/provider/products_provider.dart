@@ -58,13 +58,24 @@ class Products with ChangeNotifier{
   }
 
   
-  void addProduct(){
+  void addProduct(Product p1){
     //_items.add(value);
     //we need to add product
     //to add product _items.add(value)
     //after adding item please notify listeners
 
+    final Product newProduct=Product(
+      id: DateTime.now().toString(),
+      title: p1.title,
+      description: p1.description,
+      price: p1.price,
+      imageUrl: p1.imageUrl, 
+    );
 
+
+
+
+    _items.add(newProduct);
 
     notifyListeners();
     //notifyListeners notify all listeners that items are updated when we perform update 
