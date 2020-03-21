@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 
 import './product.dart';
+import '../models/http_exception.dart';
 
 class Products with ChangeNotifier{
 
@@ -148,9 +149,24 @@ class Products with ChangeNotifier{
   }
 
 
-  void deleteProduct(String productID){
-    _items.removeWhere((element) => element.id==productID);
+  Future<void> deleteProduct(String productID)async{
+    final url='https://shop-demo-bd6d3.firebaseio.com/products/$productID.json';
+    //_items.removeWhere((element) => element.id==productID);
+    final existingProductIndex=_items.indexWhere((product)=>product.id==productID);
+    var existingProduct=_items[existingProductIndex];
+    
+    //above 3 three line is same as removeWhere but we have deleted item in existingProduct in new approach
+    final response=await http.delete(url);
+    if(response.statusCode>=400){
+        _items.insert(existingProductIndex, existingProduct);
+        notifyListeners();
+        throw HttpException('Could not delete the product');
+        //to make sure that product will remain as it is if problem is occured
+    }
+    existingProduct=null;
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+    //here in delete it still work because it never throws an error 
   }
 
   Product findByID(String id){

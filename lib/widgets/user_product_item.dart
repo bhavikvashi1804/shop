@@ -16,6 +16,7 @@ class UserProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold=Scaffold.of(context);
     return ListTile(
       title: Text(title) ,
       leading: CircleAvatar(
@@ -37,11 +38,19 @@ class UserProductItem extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.delete),
               color: Theme.of(context).errorColor,
-              onPressed: (){
-
-                Provider.of<Products>(context).deleteProduct(id);
-
-                
+              onPressed: ()async{
+                try{
+                  await Provider.of<Products>(context).deleteProduct(id);
+                }
+                catch(error){
+                  //you cannot use Scaffold.of context in async
+                  //so you need to get it from variable
+                  scaffold.showSnackBar(
+                    SnackBar(
+                      content: Text('Deleting item failed.',textAlign: TextAlign.center,),
+                    ),
+                  );
+                }
               },
             ),
 
