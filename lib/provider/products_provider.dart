@@ -86,7 +86,7 @@ class Products with ChangeNotifier{
       );
       _items.add(newProduct);
       notifyListeners();
-      
+
     }
     catch(error){
       print('error');
@@ -94,6 +94,19 @@ class Products with ChangeNotifier{
     }
     
     
+  }
+
+
+  Future<void> fetchAndSetProducts()async{
+    const url='https://shop-demo-bd6d3.firebaseio.com/products.json';
+    try{
+      final response=await http.get(url);
+      print(json.decode(response.body));
+    }
+    catch(error){
+      print(error);
+      throw error;
+    }
   }
 
   void updateProduct(String productID,Product newProduct){
