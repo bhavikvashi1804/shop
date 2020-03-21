@@ -113,60 +113,53 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
 
 
-  void _saveForm(){
-
-    final isValid=_form.currentState.validate();
-   
-
-    if(!isValid){
+  Future<void> _saveForm() async {
+    final isValid = _form.currentState.validate();
+    if (!isValid) {
       return;
-      //is it is not valid then simply exit
-      //else save the form
     }
     _form.currentState.save();
-    
-
     setState(() {
-       _isLoading=true; 
+      _isLoading = true;
     });
-   
-
-    if(_editedProduct.id!=null){
-      //we have loaded product so leaded product has ID
-      //so we need to update the product
-       Provider.of<Products>(context,listen: false).updateProduct(_editedProduct.id,_editedProduct);
-       Navigator.pop(context); 
-     
-    }
-    else {
+    if (_editedProduct.id != null) {
       Provider.of<Products>(context, listen: false)
-        .addProduct(_editedProduct)
-        .catchError((error) {
-        return showDialog(
+          .updateProduct(_editedProduct.id, _editedProduct);
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
+    } 
+    else {
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      } 
+      catch (error) {
+        await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
                 title: Text('An error occurred!'),
                 content: Text('Something went wrong.'),
                 actions: <Widget>[
-                  FlatButton(child: Text('Okay'), onPressed: () {
-                    Navigator.of(ctx).pop();
-                    setState(() {
-                      _isLoading=false;
-                    });
-                    Navigator.of(context).pop();
-
-                  },)
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                  )
                 ],
               ),
         );
-      }).then((_) {
-        //product added to the firebase storage
+      } 
+      finally {
         setState(() {
           _isLoading = false;
         });
         Navigator.of(context).pop();
-      });
+      }
     }
+    // Navigator.of(context).pop();
   }
 
   @override

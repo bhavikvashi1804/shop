@@ -60,23 +60,23 @@ class Products with ChangeNotifier{
   }
 
   
-  Future<void> addProduct(Product p1){
+  Future<void> addProduct(Product p1) async{
   
     const url='https://shop-demo-bd6d3.firebaseio.com/products.json';
-    return http.post(
-      url,
-      body: json.encode(
-        {
-          'title':p1.title,
-          'description':p1.description,
-          'price':p1.price,
-          'imageURL':p1.imageUrl,
-          'isFavorite':p1.isFavorite,
-        }
-      ),
-    ).then((response) {
+    try{
+      final response=await http.post(
+        url,
+        body: json.encode(
+          {
+            'title':p1.title,
+            'description':p1.description,
+            'price':p1.price,
+            'imageURL':p1.imageUrl,
+            'isFavorite':p1.isFavorite,
+          }
+        ),
+      );
 
-      //this wait for response then following lines are executed
       final Product newProduct=Product(
         id: json.decode(response.body)['name'],
         title: p1.title,
@@ -84,20 +84,16 @@ class Products with ChangeNotifier{
         price: p1.price,
         imageUrl: p1.imageUrl, 
       );
-      print(json.decode(response.body));
       _items.add(newProduct);
-
       notifyListeners();
-
-    }).catchError((error){
-      print(error);
-      //we recieve erroe at here
-      //now this error to edit product screen
-      throw error;
-    });
-
+      
+    }
+    catch(error){
+      print('error');
+      throw('error');
+    }
     
-   
+    
   }
 
   void updateProduct(String productID,Product newProduct){
