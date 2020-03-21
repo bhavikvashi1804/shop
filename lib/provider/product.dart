@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Product with ChangeNotifier{ 
 
@@ -23,9 +25,33 @@ class Product with ChangeNotifier{
   });
 
 
-  void toggleFavoriteStatus(){
+  void _setFavVal(bool newVal){
+    isFavorite=newVal;
+    notifyListeners();
+  }
+
+  Future<void> toggleFavoriteStatus() async{
+    final oldFavStatus=isFavorite;
     isFavorite=!isFavorite;
     notifyListeners();
+
+    try{
+      final url='https://shop-demo-bd6d3.firebaseio.com/products/$id.json';
+      final response=await http.patch(
+        url,
+        body: json.encode({
+          'isFavorite':isFavorite,
+        }),
+      );
+
+      if(response.statusCode>=400){
+         _setFavVal(oldFavStatus);
+      }
+    }
+    catch(error){
+      _setFavVal(oldFavStatus);
+    }
+    
   }
 
 
