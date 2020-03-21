@@ -60,10 +60,10 @@ class Products with ChangeNotifier{
   }
 
   
-  void addProduct(Product p1){
+  Future<void> addProduct(Product p1){
   
     const url='https://shop-demo-bd6d3.firebaseio.com/products.json';
-    http.post(
+    return http.post(
       url,
       body: json.encode(
         {

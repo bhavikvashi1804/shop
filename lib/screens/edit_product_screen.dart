@@ -42,6 +42,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     'imageURL':'',
   };
 
+  var _isLoading=false;
+
 
   @override
   void initState() {
@@ -120,21 +122,36 @@ class _EditProductScreenState extends State<EditProductScreen> {
       //else save the form
     }
     _form.currentState.save();
+    
+
+    setState(() {
+       _isLoading=true; 
+    });
+   
 
     if(_editedProduct.id!=null){
       //we have loaded product so leaded product has ID
       //so we need to update the product
        Provider.of<Products>(context,listen: false).updateProduct(_editedProduct.id,_editedProduct);
+       Navigator.pop(context); 
      
     }
     else{
       //id is null 
       //means we have new product we need to create new product
-      Provider.of<Products>(context,listen: false).addProduct(_editedProduct);
+      Provider.of<Products>(context,listen: false).addProduct(_editedProduct).then((value) {
+        //future returns void still we need to accept it
+
+        setState(() {
+          _isLoading=false; 
+        });
+        
+        Navigator.pop(context); 
+      });
     }
 
     
-    Navigator.pop(context); 
+    
 
   }
 
@@ -150,7 +167,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: _isLoading?
+      Center(
+        child: CircularProgressIndicator(),
+      ):
+      Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           
