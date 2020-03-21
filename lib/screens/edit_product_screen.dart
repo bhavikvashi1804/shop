@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -136,23 +138,35 @@ class _EditProductScreenState extends State<EditProductScreen> {
        Navigator.pop(context); 
      
     }
-    else{
-      //id is null 
-      //means we have new product we need to create new product
-      Provider.of<Products>(context,listen: false).addProduct(_editedProduct).then((value) {
-        //future returns void still we need to accept it
+    else {
+      Provider.of<Products>(context, listen: false)
+        .addProduct(_editedProduct)
+        .catchError((error) {
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                title: Text('An error occurred!'),
+                content: Text('Something went wrong.'),
+                actions: <Widget>[
+                  FlatButton(child: Text('Okay'), onPressed: () {
+                    Navigator.of(ctx).pop();
+                    setState(() {
+                      _isLoading=false;
+                    });
+                    Navigator.of(context).pop();
 
+                  },)
+                ],
+              ),
+        );
+      }).then((_) {
+        //product added to the firebase storage
         setState(() {
-          _isLoading=false; 
+          _isLoading = false;
         });
-        
-        Navigator.pop(context); 
+        Navigator.of(context).pop();
       });
     }
-
-    
-    
-
   }
 
   @override

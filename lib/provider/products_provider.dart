@@ -89,6 +89,11 @@ class Products with ChangeNotifier{
 
       notifyListeners();
 
+    }).catchError((error){
+      print(error);
+      //we recieve erroe at here
+      //now this error to edit product screen
+      throw error;
     });
 
     
