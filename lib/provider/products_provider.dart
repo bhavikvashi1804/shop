@@ -61,13 +61,6 @@ class Products with ChangeNotifier{
 
   
   void addProduct(Product p1){
-
-    //_items.add(value);
-    //we need to add product
-    //to add product _items.add(value)
-    //after adding item please notify listeners
-
-    //now send request to Firebase and storedata to Server
   
     const url='https://shop-demo-bd6d3.firebaseio.com/products.json';
     http.post(
@@ -81,25 +74,25 @@ class Products with ChangeNotifier{
           'isFavorite':p1.isFavorite,
         }
       ),
-    );
+    ).then((response) {
 
-    final Product newProduct=Product(
-      id: DateTime.now().toString(),
-      title: p1.title,
-      description: p1.description,
-      price: p1.price,
-      imageUrl: p1.imageUrl, 
-    );
+      //this wait for response then following lines are executed
+      final Product newProduct=Product(
+        id: json.decode(response.body)['name'],
+        title: p1.title,
+        description: p1.description,
+        price: p1.price,
+        imageUrl: p1.imageUrl, 
+      );
+      print(json.decode(response.body));
+      _items.add(newProduct);
 
+      notifyListeners();
 
+    });
 
-
-    _items.add(newProduct);
-
-    notifyListeners();
-    //notifyListeners notify all listeners that items are updated when we perform update 
-    //notifyListeners is provided by ChangeNotifier
-
+    
+   
   }
 
   void updateProduct(String productID,Product newProduct){
