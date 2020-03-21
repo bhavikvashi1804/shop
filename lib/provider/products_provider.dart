@@ -1,4 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 
 import './product.dart';
@@ -59,10 +61,27 @@ class Products with ChangeNotifier{
 
   
   void addProduct(Product p1){
+
     //_items.add(value);
     //we need to add product
     //to add product _items.add(value)
     //after adding item please notify listeners
+
+    //now send request to Firebase and storedata to Server
+  
+    const url='https://shop-demo-bd6d3.firebaseio.com/products.json';
+    http.post(
+      url,
+      body: json.encode(
+        {
+          'title':p1.title,
+          'description':p1.description,
+          'price':p1.price,
+          'imageURL':p1.imageUrl,
+          'isFavorite':p1.isFavorite,
+        }
+      ),
+    );
 
     final Product newProduct=Product(
       id: DateTime.now().toString(),
