@@ -9,6 +9,8 @@ class Products with ChangeNotifier{
 
 
   List<Product> _items=[
+
+    /*
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -41,6 +43,7 @@ class Products with ChangeNotifier{
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
+    */
   ];
 
 
@@ -101,7 +104,23 @@ class Products with ChangeNotifier{
     const url='https://shop-demo-bd6d3.firebaseio.com/products.json';
     try{
       final response=await http.get(url);
-      print(json.decode(response.body));
+      //print(json.decode(response.body));
+      final extractedData=json.decode(response.body) as Map<String,dynamic>;
+      final List<Product> loadedProducts=[]; 
+      extractedData.forEach((key, value) { 
+        loadedProducts.add(Product(
+          id: key,
+          title: value['title'],
+          description: value['description'],
+          price: value['price'],
+          imageUrl: value['imageURL'],
+          isFavorite: value['isFavorite'],
+        ));
+
+      });
+
+      _items=loadedProducts;
+      notifyListeners();
     }
     catch(error){
       print(error);
