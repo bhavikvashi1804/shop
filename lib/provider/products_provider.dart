@@ -9,6 +9,11 @@ import '../models/http_exception.dart';
 class Products with ChangeNotifier{
 
 
+  final String authToken;
+
+  
+
+
   List<Product> _items=[
 
     /*
@@ -48,6 +53,7 @@ class Products with ChangeNotifier{
   ];
 
 
+  Products(this.authToken,this._items);
 
   List<Product> get items{
     //do not returns _items directly 
@@ -64,9 +70,11 @@ class Products with ChangeNotifier{
   }
 
   
+
+
   Future<void> addProduct(Product p1) async{
   
-    const url='https://shop-demo-bd6d3.firebaseio.com/products.json';
+    final url='https://shop-demo-bd6d3.firebaseio.com/products.json?auth=$authToken';
     try{
       final response=await http.post(
         url,
@@ -102,7 +110,7 @@ class Products with ChangeNotifier{
 
 
   Future<void> fetchAndSetProducts()async{
-    const url='https://shop-demo-bd6d3.firebaseio.com/products.json';
+    final url='https://shop-demo-bd6d3.firebaseio.com/products.json?auth=$authToken';
     try{
       final response=await http.get(url);
       //print(json.decode(response.body));
@@ -136,7 +144,7 @@ class Products with ChangeNotifier{
   Future<void> updateProduct(String productID,Product newProduct)async{
     final existProductIndex =_items.indexWhere((element) => element.id==productID);
     if(existProductIndex>=0){
-      final url='https://shop-demo-bd6d3.firebaseio.com/products/$productID.json';
+      final url='https://shop-demo-bd6d3.firebaseio.com/products/$productID.json?auth=$authToken';
       await http.patch(
         url,
         body:json.encode({
@@ -154,7 +162,7 @@ class Products with ChangeNotifier{
 
 
   Future<void> deleteProduct(String productID)async{
-    final url='https://shop-demo-bd6d3.firebaseio.com/products/$productID.json';
+    final url='https://shop-demo-bd6d3.firebaseio.com/products/$productID.json?auth=$authToken';
     //_items.removeWhere((element) => element.id==productID);
     final existingProductIndex=_items.indexWhere((product)=>product.id==productID);
     var existingProduct=_items[existingProductIndex];
