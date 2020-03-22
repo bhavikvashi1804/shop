@@ -85,6 +85,7 @@ class Products with ChangeNotifier{
             'description':p1.description,
             'price':p1.price,
             'imageURL':p1.imageUrl,
+            'creatorID':userID,
             //'isFavorite':p1.isFavorite,
           }
         ),
@@ -110,8 +111,11 @@ class Products with ChangeNotifier{
   }
 
 
-  Future<void> fetchAndSetProducts()async{
-    final url='https://shop-demo-bd6d3.firebaseio.com/products.json?auth=$authToken';
+  Future<void> fetchAndSetProducts([bool filterByUser=false])async{
+
+    final filterString= filterByUser?'orderBy="creatorID"&equalTo="$userID"':'';
+
+    final url='https://shop-demo-bd6d3.firebaseio.com/products.json?auth=$authToken&$filterString';
     try{
       final response=await http.get(url);
       //print(json.decode(response.body));
