@@ -14,6 +14,9 @@ class Auth with ChangeNotifier{
 
 
 
+  String get userID{
+    return _userID;
+  }
   
 
   //key = AIzaSyBf_mkEI8UwDly7MTmBqZliMZlYRi2IaQg

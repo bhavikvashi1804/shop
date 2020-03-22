@@ -10,6 +10,7 @@ class Products with ChangeNotifier{
 
 
   final String authToken;
+  final String userID;
 
   
 
@@ -53,7 +54,7 @@ class Products with ChangeNotifier{
   ];
 
 
-  Products(this.authToken,this._items);
+  Products(this.authToken,this.userID,this._items);
 
   List<Product> get items{
     //do not returns _items directly 
@@ -84,7 +85,7 @@ class Products with ChangeNotifier{
             'description':p1.description,
             'price':p1.price,
             'imageURL':p1.imageUrl,
-            'isFavorite':p1.isFavorite,
+            //'isFavorite':p1.isFavorite,
           }
         ),
       );
@@ -120,14 +121,22 @@ class Products with ChangeNotifier{
       if(extractedData==null){
         return;
       }
+
+      final url1='https://shop-demo-bd6d3.firebaseio.com/userFavs/$userID.json?auth=$authToken';
+      final favResponse=await http.get(url1);
+      final favData=json.decode(favResponse.body);
+
       extractedData.forEach((key, value) { 
+        //here key is prod id
         loadedProducts.add(Product(
           id: key,
           title: value['title'],
           description: value['description'],
           price: value['price'],
           imageUrl: value['imageURL'],
-          isFavorite: value['isFavorite'],
+          isFavorite:
+              favData == null ? false : favData[key] ?? false,
+          //isFavorite: false,
         ));
 
       });
