@@ -136,7 +136,7 @@ class Products with ChangeNotifier{
           id: key,
           title: value['title'],
           description: value['description'],
-          price: value['price'],
+          price: value['price'].toDouble(),
           imageUrl: value['imageURL'],
           isFavorite:
               favData == null ? false : favData[key] ?? false,
