@@ -30,6 +30,7 @@ class OrdersScreen extends StatelessWidget {
           }
           else{
             if(dataSnapShot.error!=null){
+              print(dataSnapShot.error);
               return Center(
                 child:Text('An error occured!')
               );
