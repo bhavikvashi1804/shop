@@ -30,13 +30,13 @@ class Product with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus() async{
+  Future<void> toggleFavoriteStatus(String token) async{
     final oldFavStatus=isFavorite;
     isFavorite=!isFavorite;
     notifyListeners();
 
     try{
-      final url='https://shop-demo-bd6d3.firebaseio.com/products/$id.json';
+      final url='https://shop-demo-bd6d3.firebaseio.com/products/$id.json?auth=$token';
       final response=await http.patch(
         url,
         body: json.encode({

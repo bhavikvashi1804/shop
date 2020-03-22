@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../screens/product_detail_screen.dart';
 import '../provider/product.dart';
 import '../provider/cart.dart';
+import '../provider/auth.dart';
 
 class ProductItem extends StatelessWidget {
   
@@ -22,6 +23,9 @@ class ProductItem extends StatelessWidget {
     final Cart cart=Provider.of<Cart>(context,listen: false);
     //set listen to false we want that items should be added to cart but we do not want build UI again
     
+
+    final Auth authData=Provider.of<Auth>(context,listen: false);
+
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -44,7 +48,7 @@ class ProductItem extends StatelessWidget {
               color: Theme.of(context).accentColor,
               icon: Icon(product.isFavorite?Icons.favorite:Icons.favorite_border),
               onPressed: () {
-                product.toggleFavoriteStatus();
+                product.toggleFavoriteStatus(authData.token);
                 //here we donot require the setState as we are manage state via provider
               },
             ),
