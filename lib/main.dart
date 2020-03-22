@@ -8,6 +8,7 @@ import './screens/cart_screen.dart';
 import './screens/orders_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
+import './screens/splash_screen.dart';
 import './screens/auth_screen.dart';
 import './provider/products_provider.dart';
 import './provider/cart.dart';
@@ -54,15 +55,22 @@ class MyApp extends StatelessWidget {
 
           ),
           //home: ProductsOverviewScreen(),
-          home: auth.isAuth?ProductsOverviewScreen(): AuthScreen(),
+          home: auth.isAuth?ProductsOverviewScreen(): 
+          FutureBuilder(
+            future: auth.tryAutoLogin(),
+            builder: (ctx,authResultSS)=>
+            authResultSS.connectionState==ConnectionState.waiting?  
+            SplashScreen():
+            AuthScreen(),
+          ),
 
           routes: {
             //'/':(ctx)=>ProductsOverviewScreen(),
-            ProductDetailScreen.routeName:(ctx)=>auth.isAuth?ProductDetailScreen():AuthScreen(),
-            CartScreen.routeName:(ctx)=>auth.isAuth?CartScreen():AuthScreen(),
-            OrdersScreen.routeName:(ctx)=>auth.isAuth?OrdersScreen():AuthScreen(),
-            UserProductsScreen.routeName:(ctx)=>auth.isAuth?UserProductsScreen():AuthScreen(),
-            EditProductScreen.routeName:(ctx)=>auth.isAuth?EditProductScreen():AuthScreen(),
+            ProductDetailScreen.routeName:(ctx)=>ProductDetailScreen(),
+            CartScreen.routeName:(ctx)=>CartScreen(),
+            OrdersScreen.routeName:(ctx)=>OrdersScreen(),
+            UserProductsScreen.routeName:(ctx)=>UserProductsScreen(),
+            EditProductScreen.routeName:(ctx)=>EditProductScreen(),
           },
         ),
       ),
