@@ -36,7 +36,19 @@ class OrdersScreen extends StatelessWidget {
             }
             else{
               return Consumer<Orders>(
-                builder: (context,ordersData, child) =>ListView.builder(
+                builder: (context,ordersData, child) =>ordersData.orders.length==0?
+                Center(
+                  child: Text(
+                    "You have not placed any orders",
+                    style: TextStyle(
+                      color: Colors.purpleAccent,
+                      fontSize: 25,
+                      
+                    ),
+                    
+                  ),
+                ):
+                ListView.builder(
                   itemCount: ordersData.orders.length ,
                   itemBuilder: (ctx,i)=>OrderItem(
                     order: ordersData.orders[i],
