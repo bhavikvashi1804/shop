@@ -173,7 +173,7 @@ class _AuthCardState extends State<AuthCard> {
       _showErrorDialog(errorMsg);
     }
     catch(error){
-      const  errorMsg='Could not authenticate you. Please try again later.';
+      const  errorMsg='Could not authenticate you.\nPlease check your network connectivity and try again later.';
       _showErrorDialog(errorMsg);
     }
     
