@@ -106,7 +106,7 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
 
   var containerHeight=260;
   AnimationController _controller;
-  Animation<Size> _heightAnimation;
+  Animation<Offset> _slideAnimation;
   Animation<double> _opacityAnimation;
 
 
@@ -120,13 +120,13 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
       )
     );
 
-    _heightAnimation=Tween<Size>(
-      begin: Size(double.infinity,260),
-      end:Size(double.infinity,320) ,
+    _slideAnimation=Tween<Offset>(
+      begin: Offset(0,-1.5),
+      end:Offset(0,0) ,
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.linear,
+        curve: Curves.fastOutSlowIn,
       ),
     );
 
@@ -309,17 +309,20 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                   duration: Duration(milliseconds: 300),                
                   child: FadeTransition(
                     opacity: _opacityAnimation,
-                    child: TextFormField(
-                      enabled: _authMode == AuthMode.Signup,
-                      decoration: InputDecoration(labelText: 'Confirm Password'),
-                      obscureText: true,
-                      validator: _authMode == AuthMode.Signup
-                          ? (value) {
-                              if (value != _passwordController.text) {
-                                return 'Passwords do not match!';
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: TextFormField(
+                        enabled: _authMode == AuthMode.Signup,
+                        decoration: InputDecoration(labelText: 'Confirm Password'),
+                        obscureText: true,
+                        validator: _authMode == AuthMode.Signup
+                            ? (value) {
+                                if (value != _passwordController.text) {
+                                  return 'Passwords do not match!';
+                                }
                               }
-                            }
-                          : null,
+                            : null,
+                      ),
                     ),
                   ),
                 ),
