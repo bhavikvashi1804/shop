@@ -32,8 +32,11 @@ class ProductItem extends StatelessWidget {
       //ClipRRect is used to provide circular border
       child: GridTile(
         child: GestureDetector(
-          child: Image.network(
-            product.imageUrl,
+          child: FadeInImage(
+            placeholder: AssetImage('assets/images/product-placeholder.png'),
+            image: NetworkImage(
+              product.imageUrl,
+            ), 
             fit: BoxFit.cover,
           ),
           onTap: (){
