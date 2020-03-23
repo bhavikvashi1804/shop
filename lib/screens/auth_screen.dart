@@ -300,19 +300,27 @@ class _AuthCardState extends State<AuthCard> with SingleTickerProviderStateMixin
                     _authData['password'] = value;
                   },
                 ),
-                FadeTransition(
-                  opacity: _opacityAnimation,
-                  child: TextFormField(
-                    enabled: _authMode == AuthMode.Signup,
-                    decoration: InputDecoration(labelText: 'Confirm Password'),
-                    obscureText: true,
-                    validator: _authMode == AuthMode.Signup
-                        ? (value) {
-                            if (value != _passwordController.text) {
-                              return 'Passwords do not match!';
+                AnimatedContainer(
+                  constraints: BoxConstraints(
+                    minHeight: _authMode==AuthMode.Signup?60:0,
+                    maxHeight: _authMode==AuthMode.Signup?120:0,
+                  ),
+                  curve: Curves.easeIn,
+                  duration: Duration(milliseconds: 300),                
+                  child: FadeTransition(
+                    opacity: _opacityAnimation,
+                    child: TextFormField(
+                      enabled: _authMode == AuthMode.Signup,
+                      decoration: InputDecoration(labelText: 'Confirm Password'),
+                      obscureText: true,
+                      validator: _authMode == AuthMode.Signup
+                          ? (value) {
+                              if (value != _passwordController.text) {
+                                return 'Passwords do not match!';
+                              }
                             }
-                          }
-                        : null,
+                          : null,
+                    ),
                   ),
                 ),
                 SizedBox(
