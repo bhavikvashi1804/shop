@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/helper/custom_route.dart';
 
 
 import './screens/product_overview_screen.dart';
@@ -52,6 +53,15 @@ class MyApp extends StatelessWidget {
             accentColor: Colors.deepOrange,
 
             fontFamily: 'Lato',
+
+            pageTransitionsTheme: PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: CustomPageTransitionBuilder(),
+                TargetPlatform.iOS:CustomPageTransitionBuilder(),
+
+              }
+            )
+            
 
           ),
           //home: ProductsOverviewScreen(),
